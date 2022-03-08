@@ -1,14 +1,30 @@
 from typing import Optional
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",
+    "http://localhost",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def read_root():
-    return {"response": "This is an example simplification"}
+    return {
+        "abstractive": "This is an abstractive simplification",
+        "extractive": "This is an extractive simplification",
+    }
 
 
 def main():

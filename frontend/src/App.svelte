@@ -1,29 +1,47 @@
 <script>
-  import logo from './assets/svelte.png'
-  import Counter from './lib/Counter.svelte'
+  let promise = Promise.resolve([]);
+  const fetchResponse = async () => {
+    const response = await fetch("http://127.0.0.1:8000");
+    const data = await response.json();
+    console.debug(data);
+    return data;
+  };
+
+  const onButtonClick = () => {
+    promise = fetchResponse();
+  };
 </script>
 
 <main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello world!</h1>
+  <h1>Terms and Conditions Simplifier</h1>
 
-  <Counter />
+  <textarea
+    rows="20"
+    cols="60"
+    placeholder="Paste the Terms and Conditions here..."
+  />
 
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
+  <button on:click={onButtonClick}>Click to receive response</button>
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
+  <br />
+
+  {#await promise}
+    Awaiting response from server...
+  {:then data}
+    {#if data.abstractive == undefined}
+      No simplification received yet
+    {:else}
+      {data.abstractive}
+    {/if}
+  {:catch error}
+    There was an error accessing the API: {error}
+  {/await}
 </main>
 
 <style>
   :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
 
   main {
@@ -32,34 +50,17 @@
     margin: 0 auto;
   }
 
-  img {
-    height: 16rem;
-    width: 16rem;
+  textarea {
+    display: block;
+    margin: 2em auto;
+    border: 1px solid;
+    border-radius: 5px;
   }
 
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
+  button {
+    border: none;
+    border-radius: 5px;
+    padding: 2em;
+    font-size: 1em;
   }
 </style>
