@@ -2,6 +2,7 @@ from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import lorem
 
 app = FastAPI()
 
@@ -22,7 +23,7 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {
-        "abstractive": "This is an abstractive simplification",
+        "abstractive": lorem.paragraph(),
         "extractive": "This is an extractive simplification",
     }
 

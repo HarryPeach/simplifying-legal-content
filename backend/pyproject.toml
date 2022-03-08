@@ -8,6 +8,7 @@ authors = ["Harry Peach <4750998+HarryPeach@users.noreply.github.com>"]
 python = "^3.10"
 fastapi = "^0.75.0"
 uvicorn = {extras = ["standard"], version = "^0.17.5"}
+lorem = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
