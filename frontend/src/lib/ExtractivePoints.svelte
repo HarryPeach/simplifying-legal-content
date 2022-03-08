@@ -10,6 +10,7 @@
 
 <style>
   li {
+    text-align: left;
     list-style-type: none;
     padding: 10px;
     margin: 4px;

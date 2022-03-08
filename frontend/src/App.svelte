@@ -35,6 +35,9 @@
       />
       <button on:click={onButtonClick}>Click to receive response</button>
       <br />
+    </div>
+    <div id="grid-item">
+      <h2>Abstractive Summary</h2>
       {#await promise}
         Awaiting response from server...
       {:then data}
@@ -52,35 +55,14 @@
       <ExtractivePoints
         points={[
           { point: "Critical Point", level: "critical" },
+          { point: "Another Critical Point", level: "critical" },
           { point: "Warn Point", level: "warn" },
           { point: "Neutral Point", level: "neutral" },
+          { point: "Another Neutral Point", level: "neutral" },
+          { point: "Another Neutral Point", level: "neutral" },
           { point: "Good Point", level: "good" },
         ]}
       />
-    </div>
-    <div id="grid-item">
-      <h2>Abstractive Summary</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam placerat
-        a leo eu vestibulum. Vestibulum pulvinar dolor eu diam congue, at
-        interdum erat sollicitudin. Aliquam feugiat efficitur lectus
-        sollicitudin varius. Nunc a convallis augue, nec sagittis sem. Aenean
-        volutpat efficitur mollis. Vestibulum auctor leo malesuada, congue erat
-        fermentum, suscipit turpis. Suspendisse viverra ipsum sodales, efficitur
-        leo at, mattis ligula. Aenean vel tortor id tellus laoreet commodo vel
-        ac mauris. Quisque accumsan rutrum nibh, et dictum mauris efficitur sit
-        amet. Phasellus vulputate elit id ex molestie varius. Aliquam erat
-        volutpat. Duis consectetur sem id erat aliquet, a scelerisque lacus
-        malesuada. Nunc commodo nisl at porta consectetur. Proin congue eros
-        odio, nec mollis magna feugiat non. Vivamus ut purus sapien. Vivamus et
-        lectus sem. Ut rhoncus elit in est aliquam pellentesque. Proin massa
-        massa, maximus nec massa nec, blandit euismod metus. Integer aliquet
-        dignissim enim et sagittis. Vestibulum felis magna, sodales sed faucibus
-        vitae, molestie eget dolor. Sed efficitur, lacus ut venenatis volutpat,
-        felis ligula porttitor ante, et volutpat lectus odio eu mi. Cras
-        pulvinar convallis felis, id lacinia metus elementum at. Morbi quis
-        magna facilisis, aliquet mauris quis, dapibus enim.
-      </p>
     </div>
   </div>
   <footer>Created by Harry Peach &copy;</footer>
@@ -88,6 +70,7 @@
 
 <style>
   :root {
+    --primary-text-color: rgb(197, 32, 32);
     font-family: sans-serif;
   }
 
