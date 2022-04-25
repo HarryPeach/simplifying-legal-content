@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import lorem
-from backend.severity_classifier import get_sentence_classification
+from backend.severity_classifier import SeverityClassifier
 
 app = FastAPI()
 
@@ -30,8 +30,9 @@ def read_root():
 
 
 def main():
-    get_sentence_classification()
-
+    classification = SeverityClassifier().get_classification(
+        "there is no duty to keep that information confidential or to discontinue or forego any representation")
+    print(classification)
     # uvicorn.run("backend.__main__:app", host="127.0.0.1",
     # port=8000, reload=True, workers=2)
 
