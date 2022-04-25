@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import lorem
+from backend.severity_classifier import get_sentence_classification
 
 app = FastAPI()
 
@@ -29,9 +30,10 @@ def read_root():
 
 
 def main():
-    print("Hello world!")
-    uvicorn.run("backend.__main__:app", host="127.0.0.1",
-                port=8000, reload=True, workers=2)
+    get_sentence_classification()
+
+    # uvicorn.run("backend.__main__:app", host="127.0.0.1",
+    # port=8000, reload=True, workers=2)
 
 
 if __name__ == "__main__":
