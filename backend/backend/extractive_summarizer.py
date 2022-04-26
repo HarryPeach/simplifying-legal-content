@@ -5,7 +5,7 @@ from nltk.tokenize import sent_tokenize
 from torch import threshold
 
 
-class ExtractiveSummarizer():
+class ExtractiveSummariser():
     def __init__(self, threshold, embeddings_path="models/extractive/embeddings.npz", model="all-mpnet-base-v2"):
         self.sentence_model = SentenceTransformer(model)
         self.embeddings = np.load(embeddings_path)["arr_0"]
@@ -38,7 +38,7 @@ class ExtractiveSummarizer():
         results = zip(range(len(distances)), distances)
         results = sorted(results, key=lambda x: x[1])
 
-        return True if results[0][1] > threshold else False
+        return True if 1 - results[0][1] > self.threshold else False
 
     def summarise(self, doc: str) -> list[str]:
         """Summarises a document using the extractive summariser
@@ -52,8 +52,8 @@ class ExtractiveSummarizer():
         sent_tokens = sent_tokenize(doc)
 
         classified: list[str] = []
-        for text, embdg in zip(sent_tokens, self._get_embeddings(sent_tokens)):
-            if self._classify(text, embdg):
-                classified.append(text)
+        for _, embdg in zip(sent_tokens, self._get_embeddings(sent_tokens)):
+            if self._classify(embdg):
+                classified.append(embdg)
 
         return classified
