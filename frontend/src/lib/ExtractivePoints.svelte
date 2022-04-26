@@ -3,8 +3,8 @@
 </script>
 
 <main>
-  {#each points as { point, level }, i}
-    <li class={level}>{point}</li>
+  {#each points as { classification, text }, i}
+    <li class={classification}>{text}</li>
   {/each}
 </main>
 
@@ -19,11 +19,11 @@
     border-radius: 5px;
   }
 
-  .critical {
+  .blocker {
     background: #ffaaaa;
     border-color: #ff7777;
   }
-  .warn {
+  .bad {
     background: #ffff77;
     border-color: #aaaa55;
   }

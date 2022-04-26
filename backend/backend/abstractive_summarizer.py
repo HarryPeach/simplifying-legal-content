@@ -16,4 +16,4 @@ class AbstractiveSummariser():
             str: The simplification as a string
         """
         # TODO: Implement
-        return lorem.paragraph()
+        return "Sample summary: " + lorem.paragraph()

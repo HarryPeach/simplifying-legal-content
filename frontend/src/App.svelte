@@ -1,17 +1,58 @@
 <script>
   import ExtractivePoints from "./lib/ExtractivePoints.svelte";
 
-  let resolved = { abstractive: "", extractive: "" };
-  let promise = Promise.resolve(resolved);
-  const fetchResponse = async () => {
-    const response = await fetch("http://127.0.0.1:8000");
-    const data = await response.json();
-    console.debug(data);
-    return data;
+  let text_input = "";
+  let points = [];
+
+  let headers = new Headers();
+  headers.append("Content-Type", "application/json");
+
+  let abstractive_resolved = undefined;
+  let abstractive_promise = Promise.resolve(abstractive_resolved);
+
+  const getExtractiveSummary = async (input) => {
+    const extractive = await fetch("http://127.0.0.1:8000/extractive/", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        text: input,
+        threshold: 0.725,
+      }),
+    });
+
+    return await extractive.json();
   };
 
-  const onButtonClick = () => {
-    promise = fetchResponse();
+  const getAbstractiveSummary = async (input) => {
+    const abstractive = await fetch("http://127.0.0.1:8000/abstractive/", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        text: input,
+      }),
+    });
+
+    return await abstractive.json();
+  };
+
+  const getSeverityClassification = async (input) => {
+    const severity = await fetch("http://127.0.0.1:8000/severity", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        items: input,
+      }),
+    });
+    return await severity.json();
+  };
+
+  const onButtonClick = async () => {
+    console.debug("Getting extractive summary");
+    const extractive_summary = await getExtractiveSummary(text_input);
+    console.debug("Getting abstractive summary");
+    abstractive_promise = await getAbstractiveSummary(extractive_summary);
+    console.debug("Getting severity classification");
+    points = await getSeverityClassification(extractive_summary);
   };
 </script>
 
@@ -32,19 +73,20 @@
         rows="10"
         cols="30"
         placeholder="Paste the Terms and Conditions here..."
+        bind:value={text_input}
       />
       <button on:click={onButtonClick}>Click to receive response</button>
       <br />
     </div>
     <div id="grid-item">
       <h2>Abstractive Summary</h2>
-      {#await promise}
+      {#await abstractive_promise}
         Awaiting response from server...
       {:then data}
-        {#if data.abstractive == undefined}
+        {#if data == undefined}
           No simplification received yet
         {:else}
-          {data.abstractive}
+          {data}
         {/if}
       {:catch error}
         There was an error accessing the API: {error}
@@ -52,17 +94,7 @@
     </div>
     <div id="grid-item">
       <h2>Extractive Summary</h2>
-      <ExtractivePoints
-        points={[
-          { point: "Critical Point", level: "critical" },
-          { point: "Another Critical Point", level: "critical" },
-          { point: "Warn Point", level: "warn" },
-          { point: "Neutral Point", level: "neutral" },
-          { point: "Another Neutral Point", level: "neutral" },
-          { point: "Another Neutral Point", level: "neutral" },
-          { point: "Good Point", level: "good" },
-        ]}
-      />
+      <ExtractivePoints {points} />
     </div>
   </div>
   <footer>Created by Harry Peach &copy;</footer>

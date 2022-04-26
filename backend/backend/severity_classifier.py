@@ -32,19 +32,23 @@ class SeverityClassifier():
             output = self.model(text, torch.tensor([0]))
             return output.argmax(1).item()
 
-    def classify_document(self, sentences: list[str]) -> list[tuple[str, str]]:
+    def classify_document(self, sentences: list[str]) -> list[dict[str, str]]:
         """Returns the classifications of each sentence in a document
 
         Args:
             sentences (list[str]): The list of sentences to classify 
 
         Returns:
-            list[tuple[str, dict[int, str]]]: The list of sentences and their classifications as found in the CLASSIFICATION_LABEL dict
+            list[dict[str, str]]: The list of sentences and their classifications as found in the CLASSIFICATION_LABEL dict
         """
         classifications = []
         for sentence in sentences:
             classifications.append(
-                (sentence, self.classify_sentence(sentence)))
+                {
+                    "text": sentence,
+                    "classification": self.classify_sentence(sentence)
+                }
+            )
 
         return classifications
 
