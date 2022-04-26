@@ -3,11 +3,13 @@ lockfileVersion: 5.3
 specifiers:
   '@sveltejs/vite-plugin-svelte': ^1.0.0-next.30
   svelte: ^3.44.0
+  svelte-loading-spinners: ^0.1.7
   vite: ^2.8.0
 
 devDependencies:
   '@sveltejs/vite-plugin-svelte': 1.0.0-next.39_svelte@3.46.4+vite@2.8.6
   svelte: 3.46.4
+  svelte-loading-spinners: 0.1.7
   vite: 2.8.6
 
 packages:
@@ -372,6 +374,10 @@ packages:
       svelte: '>=3.19.0'
     dependencies:
       svelte: 3.46.4
+    dev: true
+
+  /svelte-loading-spinners/0.1.7:
+    resolution: {integrity: sha512-EKCId1DjVL2RSUVJJsvtNcqQHox03XIgh4xh/4p7r6ST7d8mut6INY9/LqK4A17PFU64+3quZmqiSfOlf480CA==}
     dev: true
 
   /svelte/3.46.4:

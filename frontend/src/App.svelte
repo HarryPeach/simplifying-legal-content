@@ -1,13 +1,15 @@
 <script>
   import ExtractivePoints from "./lib/ExtractivePoints.svelte";
+  import LoadingBar from "./lib/LoadingBar.svelte";
 
   let text_input = "";
   let points = [];
+  let current_status = "";
 
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
 
-  let abstractive_resolved = undefined;
+  let abstractive_resolved;
   let abstractive_promise = Promise.resolve(abstractive_resolved);
 
   const getExtractiveSummary = async (input) => {
@@ -16,7 +18,7 @@
       headers: headers,
       body: JSON.stringify({
         text: input,
-        threshold: 0.725,
+        threshold: 0.5,
       }),
     });
 
@@ -36,7 +38,7 @@
   };
 
   const getSeverityClassification = async (input) => {
-    const severity = await fetch("http://127.0.0.1:8000/severity", {
+    const severity = await fetch("http://127.0.0.1:8000/severity/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -47,22 +49,23 @@
   };
 
   const onButtonClick = async () => {
-    console.debug("Getting extractive summary");
+    current_status = "Creating extractive summary";
     const extractive_summary = await getExtractiveSummary(text_input);
-    console.debug("Getting abstractive summary");
+    current_status = "Creating abstractive summary";
     abstractive_promise = await getAbstractiveSummary(extractive_summary);
-    console.debug("Getting severity classification");
+    current_status = "Classifying severity";
     points = await getSeverityClassification(extractive_summary);
+    current_status = "";
   };
 </script>
 
 <main>
+  <LoadingBar status={current_status} />
   <div class="title">
     <h1>Terms and Conditions Simplifier</h1>
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam placerat a
-      leo eu vestibulum. Vestibulum pulvinar dolor eu diam congue, at interdum
-      erat sollicitudin. Aliquam feugiat efficitur lectus sollicitudin varius.
+      This service is designed to take in a Terms of Service in text form and
+      create simplified summaries for you!
     </p>
   </div>
 
@@ -113,7 +116,6 @@
   }
   main {
     text-align: center;
-    padding: 1em;
     margin: 0 auto;
   }
 
