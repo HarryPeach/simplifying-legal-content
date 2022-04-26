@@ -5,11 +5,11 @@
 
 <main class={status == "" ? "hidden" : ""}>
   <div id="inner">
-    <h1>Loading simplification</h1>
+    <h2>Loading simplification</h2>
     <div class="spinner">
       <Jumper />
     </div>
-    <h2>This may take some time</h2>
+    <h3>This may take some time</h3>
     <span>Current status: {status}</span>
   </div>
 </main>

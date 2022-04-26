@@ -72,6 +72,10 @@
   <div id="grid-container">
     <div id="grid-item">
       <h2>Terms</h2>
+      <span class="explanation"
+        >Paste the Terms and Conditions in the text box below, modify the
+        settings and then click to process the response.</span
+      >
       <textarea
         rows="10"
         cols="30"
@@ -83,6 +87,11 @@
     </div>
     <div id="grid-item">
       <h2>Abstractive Summary</h2>
+      <span class="explanation">
+        The <strong>Abstractive Summary</strong> is a summary that attempts to simplify
+        a text into a human-readable format. This should be much shorter than the
+        original Terms and also use simpler language.
+      </span>
       {#await abstractive_promise}
         Awaiting response from server...
       {:then data}
@@ -97,6 +106,14 @@
     </div>
     <div id="grid-item">
       <h2>Extractive Summary</h2>
+      <span class="explanation">
+        The <strong>Extractive Summary</strong> is a summary that is created
+        from verbatim points in the original terms. They are also automatically
+        ranked by the "severity" and importance of the terms, with red being a
+        <strong>blocker</strong>, yellow being a <strong>bad</strong> point,
+        grey being <strong>neutral</strong> and green being
+        <strong>good</strong>.
+      </span>
       <ExtractivePoints {points} />
     </div>
   </div>
@@ -113,6 +130,12 @@
     width: 30%;
     min-width: 320px;
     margin: auto;
+  }
+
+  .explanation {
+    display: block;
+    color: rgba(0, 0, 0, 0.6);
+    margin: 20px 0;
   }
   main {
     text-align: center;
