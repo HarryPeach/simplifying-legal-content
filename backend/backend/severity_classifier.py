@@ -1,6 +1,5 @@
 import torch
 from torchtext.data.utils import get_tokenizer
-from nltk.tokenize import sent_tokenize
 
 CLASSIFICATION_LABEL = {
     0: "bad",
@@ -19,38 +18,36 @@ class SeverityClassifier():
         # Initialise model for evaluation mode
         self.model.eval()
 
-    def _text_pipeline(self, x):
+    def _text_pipeline(self, x) -> None:
         return self.vocab(self.tokenizer(x))
 
-    def _yield_tokens(self, data_iter):
+    def _yield_tokens(self, data_iter) -> None:
         for _, text in data_iter:
             yield self.tokenizer(text)
 
-    def _predict(self, text, text_pipeline) -> :
+    def _predict(self, text, text_pipeline) -> None:
         with torch.no_grad():
             text = torch.tensor(text_pipeline(text)).to(torch.int64)
             output = self.model(text, torch.tensor([0]))
             return output.argmax(1).item()
 
-    def classify_document(self, doc: str) -> list[tuple[str, dict[int, str]]]:
+    def classify_document(self, sentences: list[str]) -> list[tuple[str, str]]:
         """Returns the classifications of each sentence in a document
 
         Args:
-            doc (str): The document as a string
+            sentences (list[str]): The list of sentences to classify 
 
         Returns:
             list[tuple[str, dict[int, str]]]: The list of sentences and their classifications as found in the CLASSIFICATION_LABEL dict
         """
-        sent_tokens = sent_tokenize(doc)
-
         classifications = []
-        for sentence in sent_tokens:
+        for sentence in sentences:
             classifications.append(
                 (sentence, self.classify_sentence(sentence)))
 
         return classifications
 
-    def classify_sentence(self, sentence: str):
+    def classify_sentence(self, sentence: str) -> str:
         """Classifies a sentence
 
         Args:
