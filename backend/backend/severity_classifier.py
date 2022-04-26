@@ -13,33 +13,33 @@ CLASSIFICATION_LABEL = {
 class SeverityClassifier():
     def __init__(self):
         self.tokenizer = get_tokenizer("basic_english")
-        self.vocab = torch.load("sev_vocab.pt")
-        self.model = torch.jit.load("sev_scripted.pt")
+        self.vocab = torch.load("models/severity/vocab.pt")
+        self.model = torch.jit.load("models/severity/scripted_model.pt")
 
         # Initialise model for evaluation mode
         self.model.eval()
 
-    def text_pipeline(self, x):
+    def _text_pipeline(self, x):
         return self.vocab(self.tokenizer(x))
 
-    def yield_tokens(self, data_iter):
+    def _yield_tokens(self, data_iter):
         for _, text in data_iter:
             yield self.tokenizer(text)
 
-    def predict(self, text, text_pipeline):
+    def _predict(self, text, text_pipeline) -> :
         with torch.no_grad():
             text = torch.tensor(text_pipeline(text)).to(torch.int64)
             output = self.model(text, torch.tensor([0]))
             return output.argmax(1).item()
 
-    def classify_document(self, doc: str) -> list[tuple[str, dict]]:
+    def classify_document(self, doc: str) -> list[tuple[str, dict[int, str]]]:
         """Returns the classifications of each sentence in a document
 
         Args:
             doc (str): The document as a string
 
         Returns:
-            list[tuple[str, dict]]: The list of sentences and their classifications as found in the CLASSIFICATION_LABEL dict
+            list[tuple[str, dict[int, str]]]: The list of sentences and their classifications as found in the CLASSIFICATION_LABEL dict
         """
         sent_tokens = sent_tokenize(doc)
 
@@ -59,4 +59,4 @@ class SeverityClassifier():
         Returns:
             CLASSIFICATION_LABEL: The classification on the sentence
         """
-        return CLASSIFICATION_LABEL[self.predict(sentence, self.text_pipeline)]
+        return CLASSIFICATION_LABEL[self._predict(sentence, self._text_pipeline)]

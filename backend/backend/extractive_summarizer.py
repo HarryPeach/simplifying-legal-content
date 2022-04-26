@@ -1,0 +1,3 @@
+class ExtractiveSummarizer():
+    def __init__(self):
+        ...

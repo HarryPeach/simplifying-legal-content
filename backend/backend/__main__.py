@@ -30,11 +30,8 @@ def read_root():
 
 
 def main():
-    classifications = SeverityClassifier().classify_document(
-        "This is a sentence. This is another sentence. Whoo babey!")
-    print(classifications)
-    # uvicorn.run("backend.__main__:app", host="127.0.0.1",
-    # port=8000, reload=True, workers=2)
+    uvicorn.run("backend.__main__:app", host="127.0.0.1",
+                port=8000, reload=True, workers=2)
 
 
 if __name__ == "__main__":
