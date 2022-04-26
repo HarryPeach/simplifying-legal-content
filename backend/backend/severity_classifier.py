@@ -12,8 +12,9 @@ CLASSIFICATION_LABEL = {
 class SeverityClassifier():
     def __init__(self):
         self.tokenizer = get_tokenizer("basic_english")
-        self.vocab = torch.load("models/severity/vocab.pt")
-        self.model = torch.jit.load("models/severity/scripted_model.pt")
+        self.vocab = torch.load("backend/models/severity/vocab.pt")
+        self.model = torch.jit.load(
+            "backend/models/severity/scripted_model.pt")
 
         # Initialise model for evaluation mode
         self.model.eval()

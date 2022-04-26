@@ -1,12 +1,13 @@
-from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from backend.abstractive_summarizer import AbstractiveSummariser
+from backend.severity_classifier import SeverityClassifier
+from backend.extractive_summarizer import ExtractiveSummariser
+
 import uvicorn
 import lorem
 import logging
-from pydantic import BaseModel
-
-from backend.extractive_summarizer import ExtractiveSummariser
 
 app = FastAPI()
 
@@ -35,6 +36,28 @@ class ExtractiveInputItem(BaseModel):
 async def get_extractive(item: ExtractiveInputItem):
     summariser = ExtractiveSummariser(item.threshold)
     return summariser.summarise(item.text)
+
+
+class SeverityClassiferItem(BaseModel):
+    """The input body for a severity classification
+    """
+    items: list[str]
+
+
+@app.post("/severity/")
+async def get_severity(item: SeverityClassiferItem):
+    return SeverityClassifier().classify_document(item.items)
+
+
+class AbstractiveSummaryItem(BaseModel):
+    """The input body for an abstractive summary
+    """
+    text: list[str]
+
+
+@app.post("/abstractive/")
+async def get_abstractive(item: AbstractiveSummaryItem):
+    return AbstractiveSummariser().summarise(item.text)
 
 
 @app.get("/")
