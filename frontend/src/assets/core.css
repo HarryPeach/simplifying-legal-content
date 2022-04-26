@@ -1,4 +1,18 @@
+:root {
+	--colour-accent: #FF3E00;
+}
+
+* {
+	font-family: 'Poppins', sans-serif;
+	color: rgb(55, 55, 55)
+}
+
+span {
+	line-height: 1.5em;
+}
+
 h1 {
+	font-weight: 700;
 	font-size: 3em;
 	padding: 20px;
 }

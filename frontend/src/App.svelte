@@ -18,7 +18,7 @@
       headers: headers,
       body: JSON.stringify({
         text: input,
-        threshold: 0.5,
+        threshold: 0.725,
       }),
     });
 
@@ -82,7 +82,7 @@
         placeholder="Paste the Terms and Conditions here..."
         bind:value={text_input}
       />
-      <button on:click={onButtonClick}>Click to receive response</button>
+      <button on:click={onButtonClick}>Generate Summary</button>
       <br />
     </div>
     <div id="grid-item">
@@ -98,7 +98,9 @@
         {#if data == undefined}
           No simplification received yet
         {:else}
-          {data}
+          <span>
+            {data}
+          </span>
         {/if}
       {:catch error}
         There was an error accessing the API: {error}
@@ -127,9 +129,10 @@
   }
 
   .title {
-    width: 30%;
+    width: 40%;
     min-width: 320px;
     margin: auto;
+    padding: 50px 0;
   }
 
   .explanation {
@@ -157,10 +160,11 @@
 
   #grid-item {
     min-width: 320px;
-    border: 1px dotted red;
+    border-radius: 10px;
     padding: 20px;
     margin: 20px;
     flex: 1;
+    box-shadow: 4px 4px 10px 1px rgba(0, 0, 0, 0.1);
   }
 
   textarea {
@@ -171,9 +175,13 @@
   }
 
   button {
+    cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 2em;
     font-size: 1em;
+    background: var(--colour-accent);
+    color: white;
+    font-weight: bold;
   }
 </style>
