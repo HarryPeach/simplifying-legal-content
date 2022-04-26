@@ -2,11 +2,11 @@ import scipy
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from nltk.tokenize import sent_tokenize
-from torch import threshold
+import logging
 
 
 class ExtractiveSummariser():
-    def __init__(self, threshold, embeddings_path="models/extractive/embeddings.npz", model="all-mpnet-base-v2"):
+    def __init__(self, threshold, embeddings_path="backend/models/extractive/embeddings.npz", model="all-mpnet-base-v2"):
         self.sentence_model = SentenceTransformer(model)
         self.embeddings = np.load(embeddings_path)["arr_0"]
         self.threshold = threshold
@@ -52,8 +52,8 @@ class ExtractiveSummariser():
         sent_tokens = sent_tokenize(doc)
 
         classified: list[str] = []
-        for _, embdg in zip(sent_tokens, self._get_embeddings(sent_tokens)):
+        for text, embdg in zip(sent_tokens, self._get_embeddings(sent_tokens)):
             if self._classify(embdg):
-                classified.append(embdg)
+                classified.append(text)
 
         return classified

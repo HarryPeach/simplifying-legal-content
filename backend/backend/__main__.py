@@ -3,7 +3,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import lorem
-from backend.severity_classifier import SeverityClassifier
+import logging
+from pydantic import BaseModel
+
+from backend.extractive_summarizer import ExtractiveSummariser
 
 app = FastAPI()
 
@@ -21,8 +24,21 @@ app.add_middleware(
 )
 
 
+class ExtractiveInputItem(BaseModel):
+    """The input body for an extractive summarisation request
+    """
+    text: str
+    threshold: float
+
+
+@app.post("/extractive/")
+async def get_extractive(item: ExtractiveInputItem):
+    summariser = ExtractiveSummariser(item.threshold)
+    return summariser.summarise(item.text)
+
+
 @app.get("/")
-def read_root():
+async def read_root():
     return {
         "abstractive": lorem.paragraph(),
         "extractive": "This is an extractive simplification",
@@ -30,6 +46,7 @@ def read_root():
 
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
     uvicorn.run("backend.__main__:app", host="127.0.0.1",
                 port=8000, reload=True, workers=2)
 

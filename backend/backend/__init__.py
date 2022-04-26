@@ -1,1 +1,4 @@
-__version__ = '0.1.0'
+from pathlib import Path
+from single_version import get_version
+
+__version__ = get_version('backend', Path(__file__).parent.parent)
