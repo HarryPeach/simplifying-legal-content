@@ -1,9 +1,9 @@
-
-import lorem
+from transformers import pipeline
+import torch
 
 
 class AbstractiveSummariser():
-    def __init__(self):
+    def __init__(self, model_name: str = "google/bigbird-pegasus-large-arxiv"):
         ...
 
     def summarise(self, doc: list[str]) -> str:
@@ -15,5 +15,7 @@ class AbstractiveSummariser():
         Returns:
             str: The simplification as a string
         """
-        # TODO: Implement
-        return "Sample summary: " + lorem.paragraph()
+        rejoined = " ".join(doc)
+        summariser = pipeline(
+            "summarization", model="t5-base")
+        return summariser(rejoined)[0]["summary_text"]

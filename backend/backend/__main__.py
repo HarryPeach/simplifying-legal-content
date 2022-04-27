@@ -24,6 +24,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+EXTRACTIVE_SUMMARISER = ExtractiveSummariser()
+ABSTRACTIVE_SUMMARISER = AbstractiveSummariser()
+SEVERITY_CLASSIFER = SeverityClassifier()
+
 
 class ExtractiveInputItem(BaseModel):
     """The input body for an extractive summarisation request
@@ -34,8 +38,7 @@ class ExtractiveInputItem(BaseModel):
 
 @app.post("/extractive/")
 async def get_extractive(item: ExtractiveInputItem):
-    summariser = ExtractiveSummariser(item.threshold)
-    return summariser.summarise(item.text)
+    return EXTRACTIVE_SUMMARISER.summarise(item.text, item.threshold)
 
 
 class SeverityClassiferItem(BaseModel):
@@ -46,7 +49,7 @@ class SeverityClassiferItem(BaseModel):
 
 @app.post("/severity/")
 async def get_severity(item: SeverityClassiferItem):
-    return SeverityClassifier().classify_document(item.items)
+    return SEVERITY_CLASSIFER.classify_document(item.items)
 
 
 class AbstractiveSummaryItem(BaseModel):
@@ -57,7 +60,7 @@ class AbstractiveSummaryItem(BaseModel):
 
 @app.post("/abstractive/")
 async def get_abstractive(item: AbstractiveSummaryItem):
-    return AbstractiveSummariser().summarise(item.text)
+    return ABSTRACTIVE_SUMMARISER.summarise(item.text)
 
 
 @app.get("/")
