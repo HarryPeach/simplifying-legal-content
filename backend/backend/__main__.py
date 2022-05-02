@@ -24,9 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-EXTRACTIVE_SUMMARISER = None
-ABSTRACTIVE_SUMMARISER = None
-SEVERITY_CLASSIFER = None
+EXTRACTIVE_SUMMARISER = ExtractiveSummariser()
+ABSTRACTIVE_SUMMARISER = AbstractiveSummariser()
+SEVERITY_CLASSIFER = SeverityClassifier()
 
 
 class ExtractiveInputItem(BaseModel):
@@ -73,9 +73,6 @@ async def read_root():
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
-    EXTRACTIVE_CLASIFIER = ExtractiveSummariser()
-    ABSTRACTIVE_SUMMARISER = AbstractiveSummariser()
-    SEVERITY_CLASSIFER = SeverityClassifier()
     uvicorn.run("backend.__main__:app", host="127.0.0.1",
                 port=8000, reload=True, workers=2)
 
