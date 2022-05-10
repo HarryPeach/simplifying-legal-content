@@ -1,10 +1,13 @@
-# Dissertation Web Interface
+# Simplifying Legal Content
 
-> The web interface is composed of the Svelte frontend (./frontend) and the FastAPI/PyTorch backend (./backend)
+This is the frontend and backend code for my dissertation on simplifying legal content. The repository consists of a web interface created with Svelte, and a FastAPI/PyTorch/TensorFlow backend.
+
+![Frontend Interface](https://user-images.githubusercontent.com/4750998/167718317-55fe607c-2a4e-4355-a918-371f44dc2a93.png)
 
 ## Setup / Requirements
 
-TODO
+To run the project, both the frontend and backend must be running concurrently. The models required are included within the backend directories, and use the appropriate format for an exported model.
+
 ## Starting the interface
 
 ### Backend
