@@ -3,6 +3,7 @@
   import LoadingBar from "./lib/LoadingBar.svelte";
   import SocialButtons from "./lib/SocialButtons.svelte";
   import Spoiler from "./lib/Spoiler.svelte";
+  import { variables } from "./variables";
 
   let text_input = "";
   let points = [];
@@ -18,7 +19,7 @@
   let threshold = 0.725;
 
   const getExtractiveSummary = async (input) => {
-    const extractive = await fetch("http://140.238.69.112:8000/extractive/", {
+    const extractive = await fetch(`${variables.apiurl}/extractive/`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -31,7 +32,7 @@
   };
 
   const getAbstractiveSummary = async (input) => {
-    const abstractive = await fetch("http://140.238.69.112:8000/abstractive/", {
+    const abstractive = await fetch(`${variables.apiurl}/abstractive/`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -43,7 +44,7 @@
   };
 
   const getSeverityClassification = async (input) => {
-    const severity = await fetch("http://140.238.69.112:8000/severity/", {
+    const severity = await fetch(`${variables.apiurl}/severity/`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -133,7 +134,7 @@
       <ExtractivePoints {points} />
     </div>
   </div>
-  <footer>Created by Harry Peach &copy;</footer>
+  <footer>Created by Harry Peach &copy; - Version 0.2.0</footer>
 </main>
 
 <style>

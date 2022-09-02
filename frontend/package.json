@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,7 +15,8 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
-    "svelte-loading-spinners": "^0.1.7",
-    "svelte-icons": "^2.1.0"
+    "dotenv": "^16.0.2",
+    "svelte-icons": "^2.1.0",
+    "svelte-loading-spinners": "^0.1.7"
   }
 }
