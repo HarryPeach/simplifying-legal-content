@@ -2,6 +2,7 @@
   import ExtractivePoints from "./lib/ExtractivePoints.svelte";
   import LoadingBar from "./lib/LoadingBar.svelte";
   import SocialButtons from "./lib/SocialButtons.svelte";
+  import Spoiler from "./lib/Spoiler.svelte";
 
   let text_input = "";
   let points = [];
@@ -12,6 +13,9 @@
 
   let abstractive_resolved;
   let abstractive_promise = Promise.resolve(abstractive_resolved);
+
+  let summary_length = 40;
+  let threshold = 0.725;
 
   const getExtractiveSummary = async (input) => {
     const extractive = await fetch("http://140.238.69.112:8000/extractive/", {
@@ -84,6 +88,7 @@
         placeholder="Paste the Terms and Conditions here..."
         bind:value={text_input}
       />
+      <Spoiler bind:length={summary_length} bind:threshold />
       <button on:click={onButtonClick}>Generate Summary</button>
       <br />
     </div>
