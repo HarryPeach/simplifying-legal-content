@@ -14,5 +14,8 @@
     "svelte": "^3.44.0",
     "svelte-loading-spinners": "^0.1.7",
     "vite": "^2.8.0"
+  },
+  "dependencies": {
+    "svelte-icons": "^2.1.0"
   }
 }

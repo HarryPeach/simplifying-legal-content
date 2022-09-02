@@ -1,6 +1,7 @@
 <script>
   import ExtractivePoints from "./lib/ExtractivePoints.svelte";
   import LoadingBar from "./lib/LoadingBar.svelte";
+  import SocialButtons from "./lib/SocialButtons.svelte";
 
   let text_input = "";
   let points = [];
@@ -76,6 +77,7 @@
         >Paste the Terms and Conditions in the text box below, modify the
         settings and then click to process the response.</span
       >
+      <SocialButtons bind:input={text_input} />
       <textarea
         rows="10"
         cols="30"
