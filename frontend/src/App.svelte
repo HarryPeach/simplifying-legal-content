@@ -54,6 +54,9 @@
   };
 
   const onButtonClick = async () => {
+    // console.log(document.querySelector(":root").style);
+    // return;
+    document.querySelector(":root").style.overflow = "hidden";
     current_status = "Creating extractive summary";
     const extractive_summary = await getExtractiveSummary(text_input);
     current_status = "Creating abstractive summary";
@@ -61,16 +64,18 @@
     current_status = "Classifying severity";
     points = await getSeverityClassification(extractive_summary);
     current_status = "";
+    document.querySelector(":root").style.overflow = "auto";
   };
 </script>
 
 <main>
   <LoadingBar status={current_status} />
   <div class="title">
-    <h1>Terms and Conditions Simplifier</h1>
+    <h1>LegaTeS</h1>
     <p>
-      This service is designed to take in a Terms of Service in text form and
-      create simplified summaries for you!
+      LegaTeS (Legal Text Simplification) is designed to take in Terms of
+      Service documents and Privacy Policies in text form and create simplified
+      summaries.
     </p>
   </div>
 
