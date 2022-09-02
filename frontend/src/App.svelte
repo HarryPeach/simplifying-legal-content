@@ -54,9 +54,9 @@
   };
 
   const onButtonClick = async () => {
-    // console.log(document.querySelector(":root").style);
-    // return;
+    // @ts-ignore
     document.querySelector(":root").style.overflow = "hidden";
+
     current_status = "Creating extractive summary";
     const extractive_summary = await getExtractiveSummary(text_input);
     current_status = "Creating abstractive summary";
@@ -64,6 +64,8 @@
     current_status = "Classifying severity";
     points = await getSeverityClassification(extractive_summary);
     current_status = "";
+
+    // @ts-ignore
     document.querySelector(":root").style.overflow = "auto";
   };
 </script>

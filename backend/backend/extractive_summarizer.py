@@ -2,7 +2,7 @@ import scipy
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import nltk
-from nltk.tokenize import sent_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize
 import logging
 
 
@@ -53,8 +53,16 @@ class ExtractiveSummariser():
         """
         sent_tokens = sent_tokenize(doc)
 
+        # The minimum amount of words to allow in a point
+        min_words = 15
+        fixed_tokens = []
+
+        for sentence in sent_tokens:
+            if len(word_tokenize(sentence)) > min_words:
+                fixed_tokens.append(sentence)
+
         classified: list[str] = []
-        for text, embdg in zip(sent_tokens, self._get_embeddings(sent_tokens)):
+        for text, embdg in zip(fixed_tokens, self._get_embeddings(fixed_tokens)):
             if self._classify(embdg, threshold):
                 classified.append(text)
 
