@@ -14,7 +14,6 @@
 
   const getExtractiveSummary = async (input) => {
     const extractive = await fetch("http://140.238.69.112:8000/extractive/", {
-      mode: "no-cors",
       method: "POST",
       headers: headers,
       body: JSON.stringify({
