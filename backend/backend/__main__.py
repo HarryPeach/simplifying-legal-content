@@ -68,7 +68,7 @@ async def read_root():
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
-    uvicorn.run("backend.__main__:app", host="127.0.0.1",
+    uvicorn.run("backend.__main__:app", host="0.0.0.0",
                 port=8000, reload=True, workers=2)
 
 

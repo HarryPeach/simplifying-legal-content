@@ -1,12 +1,14 @@
 import scipy
 from sentence_transformers import SentenceTransformer
 import numpy as np
+import nltk
 from nltk.tokenize import sent_tokenize
 import logging
 
 
 class ExtractiveSummariser():
     def __init__(self, embeddings_path="backend/models/extractive/embeddings.npz", model="all-mpnet-base-v2"):
+        nltk.download("punkt")
         self.sentence_model = SentenceTransformer(model)
         self.embeddings = np.load(embeddings_path)["arr_0"]
 

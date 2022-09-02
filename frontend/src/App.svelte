@@ -13,7 +13,8 @@
   let abstractive_promise = Promise.resolve(abstractive_resolved);
 
   const getExtractiveSummary = async (input) => {
-    const extractive = await fetch("http://127.0.0.1:8000/extractive/", {
+    const extractive = await fetch("http://140.238.69.112:8000/extractive/", {
+      mode: "no-cors",
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -26,7 +27,7 @@
   };
 
   const getAbstractiveSummary = async (input) => {
-    const abstractive = await fetch("http://127.0.0.1:8000/abstractive/", {
+    const abstractive = await fetch("http://140.238.69.112:8000/abstractive/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -38,7 +39,7 @@
   };
 
   const getSeverityClassification = async (input) => {
-    const severity = await fetch("http://127.0.0.1:8000/severity/", {
+    const severity = await fetch("http://140.238.69.112:8000/severity/", {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
