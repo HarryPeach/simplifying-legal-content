@@ -15,6 +15,9 @@
   let abstractive_resolved;
   let abstractive_promise = Promise.resolve(abstractive_resolved);
 
+  let simplified_resolved;
+  let simplified_promise = Promise.resolve(simplified_resolved);
+
   let summary_length = 40;
   let threshold = 0.725;
 
@@ -41,6 +44,18 @@
     });
 
     return await abstractive.json();
+  };
+
+  const getSimplification = async (input) => {
+    const simplified = await fetch(`${variables.apiurl}/simplified/`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        text: input,
+      }),
+    });
+
+    return await simplified.json();
   };
 
   const getSeverityClassification = async (input) => {
@@ -120,6 +135,10 @@
       {:catch error}
         There was an error accessing the API: {error}
       {/await}
+    </div>
+    <div id="grid-item">
+      <h2>Simplified Output</h2>
+      <span class="explanation">Simplified Output from Mayanks model</span>
     </div>
     <div id="grid-item">
       <h2>Extractive Summary</h2>
