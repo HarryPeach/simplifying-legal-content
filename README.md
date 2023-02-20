@@ -1,21 +1,29 @@
 # Simplifying Legal Content
 
+![](https://img.shields.io/badge/Python-3.9-green.svg)
+
 This is the frontend and backend code for my dissertation on simplifying legal content. The repository consists of a web interface created with Svelte, and a FastAPI/PyTorch/TensorFlow backend.
 
-![Frontend Interface](https://user-images.githubusercontent.com/4750998/167718317-55fe607c-2a4e-4355-a918-371f44dc2a93.png)
+![Frontend Interface](logo.png)
 
-## Setup / Requirements
+## Setup and Requirements
+![](https://img.shields.io/badge/Python-3.9-green.svg)
 
-To run the project, both the frontend and backend must be running concurrently. The models required are included within the backend directories, and use the appropriate format for an exported model.
+This project is tested under `Python-3.9`.
+For the `backend`, we consider the following dependencies.
 
-## Starting the interface
+```bash
+pip install -r dependencies.txt
+```
 
-### Backend
-To start the backend, navigate into the backend directory and run the command:
+The models required are included within the backend directories, and use the appropriate format for an exported model.
 
+## Usage
+
+To run the project, both the frontend and backend must be running concurrently. 
+
+1. **Backend:** To start the backend, navigate into the backend directory and run the command:
 ```poetry run start```
 
-### Frontend
-To start the frontend, navigate into the frontend direction and run the command:
-
+2. **Frontend:** To start the frontend, navigate into the frontend direction and run the command:
 ```pnpm run dev```
