@@ -8,6 +8,5 @@ sentence-transformers==2.2.2
 h11==0.14.0
 uvicorn==0.20.0
 lorem==0.1.1
-# frontend
-# launching
+spacy==3.5.0
 poetry

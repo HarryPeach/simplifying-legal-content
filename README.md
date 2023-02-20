@@ -10,6 +10,7 @@ This is the frontend and backend code for my dissertation on simplifying legal c
 ![](https://img.shields.io/badge/Python-3.9-green.svg)
 
 This project is tested under `Python-3.9`.
+
 For the `backend`, we consider the following dependencies.
 
 ```bash
@@ -17,6 +18,13 @@ pip install -r dependencies.txt
 ```
 
 The models required are included within the backend directories, and use the appropriate format for an exported model.
+
+For the frontend, there is a need to [install](https://nodejs.org/en/download/) `npm` first.
+In order to then install package manager.
+
+```bash
+npm install -g pnpm
+```
 
 ## Usage
 
