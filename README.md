@@ -35,3 +35,5 @@ To run the project, both the frontend and backend must be running concurrently.
 
 2. **Frontend:** To start the frontend, navigate into the frontend direction and run the command:
 ```pnpm run dev```
+
+![Frontend Interface](legates_example.png)
