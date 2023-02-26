@@ -51,11 +51,12 @@ class AbstractiveSummaryItem(BaseModel):
     """The input body for an abstractive summary
     """
     text: list[str]
+    length: int
 
 
 @app.post("/abstractive/")
 async def get_abstractive(item: AbstractiveSummaryItem):
-    return ABSTRACTIVE_SUMMARISER.summarise(item.text)
+    return ABSTRACTIVE_SUMMARISER.summarise(item.text, item.length)
 
 
 @app.get("/")

@@ -40,6 +40,7 @@
       headers: headers,
       body: JSON.stringify({
         text: input,
+        length: summary_length
       }),
     });
 
