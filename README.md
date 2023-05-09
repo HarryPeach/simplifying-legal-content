@@ -4,7 +4,8 @@
 
 LegaTeS represents a hybrid text summarization system aimed on extraction of the salient information from legal documents.
 This is the frontend and backend implementation of the related system. 
-The repository consists of a web interface created with Svelte, and a FastAPI/PyTorch/TensorFlow backend.
+The repository consists of a web interface created with [Svelte](https://github.com/sveltejs/svelte), 
+and a FastAPI/PyTorch/TensorFlow backend.
 
 ![Frontend Interface](logo.png)
 
@@ -60,9 +61,15 @@ and start the frontend:
 pnpm run dev
 ```
 
-
 ## Usage
 
 Once both components are running, you can visit the page from the URL that is provided by the frontend application.
 
 ![Frontend Interface](legates_example.png)
+
+## Evaluation
+
+All the resources related to evaluation are shared in `data` [folder](data/).
+
+We consider a manually composed `ToS;DR5` [dataset](data/tos-dr-5.7z) for assessment of the related text summarization system components.
+
