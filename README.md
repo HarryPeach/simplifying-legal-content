@@ -1,8 +1,10 @@
-# Simplifying Legal Content
+# LegaTeS
 
 ![](https://img.shields.io/badge/Python-3.9-green.svg)
 
-This is the frontend and backend code for my dissertation on simplifying legal content. The repository consists of a web interface created with Svelte, and a FastAPI/PyTorch/TensorFlow backend.
+LegaTeS represents a hybrid text summarization system aimed on extraction of the salient information from legal documents.
+This is the frontend and backend implementation of the related system. 
+The repository consists of a web interface created with Svelte, and a FastAPI/PyTorch/TensorFlow backend.
 
 ![Frontend Interface](logo.png)
 
