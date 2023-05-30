@@ -15,9 +15,14 @@ To run the project, both the backend and the frontend must be runing concurrentl
 
 ### Starting the backend
 
-To start the backend, it is recommneded to use [Poetry](https://python-poetry.org/docs/basic-usage/), which is a python dependency manager.
+To start the backend, it is recommended to use [Poetry](https://python-poetry.org/docs/basic-usage/), which is a python dependency manager.
 
-First, navigate into the frontend and run the following command to install all of the required dependencies:
+First, navigate into the backend:
+```bash
+cd backend
+```
+
+and run the following command to install all of the required dependencies:
 
 ```bash
 poetry install
@@ -35,8 +40,9 @@ When the models are called for the first time, they must be downloaded. They wil
 
 To start the backend without having to install Poetry, a requirements.txt file is also provided. You can install the dependencies from it like so:
 
+
 ```bash
-pip install -r dependencies.txt
+pip install -r requirements.txt
 ```
 
 Then you can start the module directly:
@@ -49,6 +55,10 @@ python -m backend
 
 For the frontend, there is a need to [install](https://nodejs.org/en/download/) `pnpm` first (or equivalent such as `npm` or `yarn`).
 
+```bash
+cd ./frontend
+```
+
 Then, you must install the dependencies:
 
 ```bash
@@ -60,6 +70,7 @@ and start the frontend:
 ```bash
 pnpm run dev
 ```
+![Frontend Interface](data/frontend.png)
 
 ## Usage
 
