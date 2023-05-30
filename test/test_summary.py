@@ -1,5 +1,6 @@
 import unittest
 
+from backend.extractive_summarizer import ExtractiveSummariser
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 from src.abstract_infer import infer
@@ -45,6 +46,12 @@ class TestSummary(unittest.TestCase):
         summary = infer(tokenizer=tokenizer, model=model, text=TestSummary.text, max_length=1024)
 
         print(summary)
+
+    def test_extractive(self):
+        summarizer = ExtractiveSummariser(embeddings_path="../backend/backend/models/extractive/embeddings.npz",
+                                          cache_folder=TestSummary.cache_dir)
+        sentences = summarizer.summarise(TestSummary.text, threshold=0.8)
+        print(sentences)
 
     def test_lsa(self):
         summary = lsa_infer(text=TestSummary.text)
