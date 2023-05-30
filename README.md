@@ -36,20 +36,8 @@ poetry run start
 
 When the models are called for the first time, they must be downloaded. They will be cached from this point onwards, making subsequent calls much quicker.
 
-### Starting the backend (alternative)
-
-To start the backend without having to install Poetry, a requirements.txt file is also provided. You can install the dependencies from it like so:
-
-
-```bash
-pip install -r requirements.txt
-```
-
-Then you can start the module directly:
-
-```bash
-python -m backend
-```
+> **Alternative setup**:
+To start the backend without having to install Poetry, a `requirements.txt` file is also provided. You can install the dependencies from it like so:
 
 ### Starting the frontend
 
