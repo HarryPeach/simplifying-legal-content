@@ -24,7 +24,6 @@ def lexrank_infer(lxr, text, sent_limit=10, keep_order=False):
     assert(isinstance(text, str))
 
     sentences = [s.strip() for s in sent_tokenize(text)]
-    print("Sentences total: ", len(sentences))
     scores_cont = lxr.rank_sentences(sentences, threshold=None, fast_power_method=False)
     data = [(sentences[i], score) for i, score in enumerate(scores_cont)]
     if keep_order:
