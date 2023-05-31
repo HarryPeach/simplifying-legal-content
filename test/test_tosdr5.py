@@ -2,7 +2,6 @@ import gc
 import unittest
 from os.path import join, dirname
 
-from backend.extractive_summarizer import ExtractiveSummariser
 from rouge_score import rouge_scorer
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
@@ -11,6 +10,7 @@ from src.tosdr5 import iter_tosdr5_texts
 from src.lsa_infer import lsa_infer
 from src.lexrank_init import lexrank_init, lexrank_infer
 from src.abstract_infer import infer
+from src.extractive import TestExtractiveSummariser
 
 
 class TestTOSDR5(unittest.TestCase):
@@ -53,7 +53,7 @@ class TestTOSDR5(unittest.TestCase):
 
     def test(self):
 
-        summarizer = ExtractiveSummariser(
+        summarizer = TestExtractiveSummariser(
             embeddings_path="../backend/backend/models/extractive/embeddings.npz",
             cache_folder=TestTOSDR5.cache_dir)
 
@@ -65,8 +65,8 @@ class TestTOSDR5(unittest.TestCase):
         models = {
             # Extractive.
             "lsa": lambda texts: [lsa_infer(t, perc_limit=0.1) for t in tqdm(texts, desc="LSA")],
-            "ex": lambda texts: [" ".join(summarizer.summarise(t, threshold=0.7)) for t in tqdm(texts, desc="Extractive")],
-            "lexrank": lambda texts: [lexrank_infer(lxr, text=t, perc_limit=0.1) for t in tqdm(texts, desc="LexRank")],
+            "ex": lambda texts: [summarizer.summarise(t, perc_limit=1.0) for t in tqdm(texts, desc="Extractive")],
+            "lexrank": lambda texts: [lexrank_infer(lxr, text=t, perc_limit=0.5) for t in tqdm(texts, desc="LexRank")],
             # Abstractive.
             "legal-pegasus": lambda texts: tqdm(self.abstract(hf_model_name="nsi319/legal-pegasus", texts=texts, max_length=512), desc="Abstract (Legal-PEGASUS)"),
             "t5": lambda texts: tqdm(self.abstract(hf_model_name="mrm8488/t5-base-finetuned-summarize-news", texts=texts, max_length=512), desc="Abstract (T5)"),
@@ -81,11 +81,14 @@ class TestTOSDR5(unittest.TestCase):
             "lexrank-longt5": lambda texts: models["longt5"](models["lexrank"](texts)),
         }
 
-        for m_name in ["lsa", "lexrank",
-                       "ex",
-                       "legal-pegasus", "t5", "longt5",
+        for m_name in [#"lsa",
+                       #"lexrank",
+                       #"ex",
+                       #"legal-pegasus", "t5", "longt5",
                        "ex-t5", "ex-longt5","ex-legal-pegasus",
-                       "lexrank-t5", "lexrank-longt5", "lexrank-legal-pegasus"
+                       #"lexrank-t5",
+                       #"lexrank-longt5",
+                       #"lexrank-legal-pegasus"
                         ]:
             if m_name in models:
                 m = models[m_name]

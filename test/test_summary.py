@@ -1,11 +1,11 @@
 import unittest
 
-from backend.extractive_summarizer import ExtractiveSummariser
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 from src.abstract_infer import infer
 from src.lsa_infer import lsa_infer
 from src.lexrank_init import lexrank_infer, lexrank_init
+from src.extractive import TestExtractiveSummariser
 import utils
 
 
@@ -38,9 +38,10 @@ class TestSummary(unittest.TestCase):
         print(summary)
 
     def test_extractive(self):
-        summarizer = ExtractiveSummariser(embeddings_path="../backend/backend/models/extractive/embeddings.npz",
-                                          cache_folder=TestSummary.cache_dir)
-        sentences = summarizer.summarise(utils.text, threshold=0.8)
+        summarizer = TestExtractiveSummariser(
+            embeddings_path="../backend/backend/models/extractive/embeddings.npz",
+            cache_folder=TestSummary.cache_dir)
+        sentences = summarizer.summarise(utils.text, perc_limit=0.1)
         print(sentences)
 
     def test_lsa(self):
