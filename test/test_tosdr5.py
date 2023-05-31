@@ -46,9 +46,10 @@ class TestTOSDR5(unittest.TestCase):
                 r[v]["f"].append(s[v][2])
 
         for m in metrics:
-            print(round(sum(r[m]["p"]) / len(r[m]["p"]), 3), " & ",
-                  round(sum(r[m]["r"]) / len(r[m]["r"]), 3), " & ",
-                  round(sum(r[m]["f"]) / len(r[m]["f"]), 3), " & ")
+            print("{}/{}/{} &".format(
+                round(sum(r[m]["p"]) / len(r[m]["p"]), 3),
+                round(sum(r[m]["r"]) / len(r[m]["r"]), 3),
+                round(sum(r[m]["f"]) / len(r[m]["f"]), 3)))
 
     def test(self):
 
@@ -62,11 +63,11 @@ class TestTOSDR5(unittest.TestCase):
         lxr = lexrank_init(corpus_path=join(dirname(__file__), "data/bbc/politics"))
 
         models = {
-            # Extractive
-            "lsa": lambda texts: [lsa_infer(t, sentences_count=10) for t in tqdm(texts, desc="LSA")],
-            "ex": lambda texts: [" ".join(summarizer.summarise(t, threshold=0.725)) for t in tqdm(texts, desc="Extractive")],
-            "lexrank": lambda texts: [lexrank_infer(lxr, text=t, sent_limit=10) for t in tqdm(texts, desc="LexRank")],
-            # Abstractive
+            # Extractive.
+            "lsa": lambda texts: [lsa_infer(t, perc_limit=0.1) for t in tqdm(texts, desc="LSA")],
+            "ex": lambda texts: [" ".join(summarizer.summarise(t, threshold=0.7)) for t in tqdm(texts, desc="Extractive")],
+            "lexrank": lambda texts: [lexrank_infer(lxr, text=t, perc_limit=0.1) for t in tqdm(texts, desc="LexRank")],
+            # Abstractive.
             "legal-pegasus": lambda texts: tqdm(self.abstract(hf_model_name="nsi319/legal-pegasus", texts=texts, max_length=512), desc="Abstract (Legal-PEGASUS)"),
             "t5": lambda texts: tqdm(self.abstract(hf_model_name="mrm8488/t5-base-finetuned-summarize-news", texts=texts, max_length=512), desc="Abstract (T5)"),
             "longt5": lambda texts: tqdm(self.abstract(hf_model_name="pszemraj/long-t5-tglobal-base-16384-book-summary", texts=texts, max_length=1020), desc="Abstract (LongT5-TGlobal)"),
@@ -74,10 +75,18 @@ class TestTOSDR5(unittest.TestCase):
             "ex-legal-pegasus": lambda texts: models["legal-pegasus"](models["ex"](texts)),
             "ex-t5": lambda texts: models["t5"](models["ex"](texts)),
             "ex-longt5": lambda texts: models["longt5"](models["ex"](texts)),
+            # Hybrid based on lexrank.
+            "lexrank-legal-pegasus": lambda texts: models["legal-pegasus"](models["lexrank"](texts)),
+            "lexrank-t5": lambda texts: models["t5"](models["lexrank"](texts)),
+            "lexrank-longt5": lambda texts: models["longt5"](models["lexrank"](texts)),
         }
 
-        for m_name in ["lsa", "ex", "lexrank",
+        for m_name in ["lsa", "lexrank",
+                       "ex",
                        "legal-pegasus", "t5", "longt5",
-                       "ex-legal-pegasus", "ex-t5", "ex-longt5"]:
-            m = models[m_name]
-            self.score(pred_texts=m(raw_texts), summ_texts=summ_texts)
+                       "ex-t5", "ex-longt5","ex-legal-pegasus",
+                       "lexrank-t5", "lexrank-longt5", "lexrank-legal-pegasus"
+                        ]:
+            if m_name in models:
+                m = models[m_name]
+                self.score(pred_texts=m(raw_texts), summ_texts=summ_texts)

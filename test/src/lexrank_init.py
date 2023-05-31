@@ -15,7 +15,7 @@ def lexrank_init(corpus_path=None, lang="en"):
     return LexRank(documents, stopwords=STOPWORDS[lang])
 
 
-def lexrank_infer(lxr, text, sent_limit=10, keep_order=False):
+def lexrank_infer(lxr, text, perc_limit=0.1, keep_order=False):
     """ LexRank inference implementation.
         We keep the same order of the information in the result output.
         NOTE: keep_oridering=True performs worser.
@@ -24,6 +24,7 @@ def lexrank_infer(lxr, text, sent_limit=10, keep_order=False):
     assert(isinstance(text, str))
 
     sentences = [s.strip() for s in sent_tokenize(text)]
+    sent_limit = round(len(sentences) * perc_limit)
     scores_cont = lxr.rank_sentences(sentences, threshold=None, fast_power_method=False)
     data = [(sentences[i], score) for i, score in enumerate(scores_cont)]
     if keep_order:
@@ -36,4 +37,3 @@ def lexrank_infer(lxr, text, sent_limit=10, keep_order=False):
         ordered = sorted(data, key=lambda item: item[1], reverse=True)
         salient_sentences = [s for s, _ in ordered]
         return ' '.join(salient_sentences[:sent_limit])
-

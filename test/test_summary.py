@@ -44,11 +44,11 @@ class TestSummary(unittest.TestCase):
         print(sentences)
 
     def test_lsa(self):
-        summary = lsa_infer(text=utils.text)
+        summary = lsa_infer(text=utils.text, perc_limit=0.1)
         print(summary)
 
     def test_lexrank(self):
         lxr = lexrank_init(corpus_path="data/bbc/politics")
-        summary = lexrank_infer(lxr, text=utils.text, sent_limit=10)
+        summary = lexrank_infer(lxr, text=utils.text, perc_limit=0.1)
         print(summary)
 
