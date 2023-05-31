@@ -15,14 +15,26 @@ def lexrank_init(corpus_path=None, lang="en"):
     return LexRank(documents, stopwords=STOPWORDS[lang])
 
 
-def lexrank_infer(lxr, text, sent_limit=10):
+def lexrank_infer(lxr, text, sent_limit=10, keep_order=False):
+    """ LexRank inference implementation.
+        We keep the same order of the information in the result output.
+        NOTE: keep_oridering=True performs worser.
+    """
     assert(isinstance(lxr, LexRank))
     assert(isinstance(text, str))
 
     sentences = [s.strip() for s in sent_tokenize(text)]
+    print("Sentences total: ", len(sentences))
     scores_cont = lxr.rank_sentences(sentences, threshold=None, fast_power_method=False)
     data = [(sentences[i], score) for i, score in enumerate(scores_cont)]
-    ordered = sorted(data, key=lambda item: item[1], reverse=True)
-    salient_sentences = [s for s, _ in ordered]
+    if keep_order:
+        data = [(i, d[0], d[1]) for i, d in enumerate(data)]
+        ordered = sorted(data, key=lambda item: item[2], reverse=True)
+        salient_sentences = set([i for i, _, _ in ordered][:sent_limit])
+        return ' '.join([s for i, s, _ in data if i in salient_sentences])
+    else:
+        # Most salient first.
+        ordered = sorted(data, key=lambda item: item[1], reverse=True)
+        salient_sentences = [s for s, _ in ordered]
+        return ' '.join(salient_sentences[:sent_limit])
 
-    return ' '.join(salient_sentences[:sent_limit])
