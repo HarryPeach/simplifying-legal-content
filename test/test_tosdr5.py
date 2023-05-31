@@ -1,30 +1,37 @@
+import gc
 import unittest
+from os.path import join, dirname
+
 from backend.extractive_summarizer import ExtractiveSummariser
 from rouge_score import rouge_scorer
 from tqdm import tqdm
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
 from src.tosdr5 import iter_tosdr5_texts
+from src.lsa_infer import lsa_infer
+from src.lexrank_init import lexrank_init, lexrank_infer
+from src.abstract_infer import infer
 
 
 class TestTOSDR5(unittest.TestCase):
 
     cache_dir = "./cache"
 
-    def test(self):
+    def pred_texts_extractor(self, raw_texts):
+        return
 
-        summarizer = ExtractiveSummariser(
-            embeddings_path="../backend/backend/models/extractive/embeddings.npz",
-            cache_folder=TestTOSDR5.cache_dir)
+    def abstract(self, hf_model_name, texts, max_length):
+        tokenizer = AutoTokenizer.from_pretrained(hf_model_name, cache_dir=TestTOSDR5.cache_dir)
+        model = AutoModelForSeq2SeqLM.from_pretrained(hf_model_name, cache_dir=TestTOSDR5.cache_dir)
+        for t in texts:
+            yield infer(model, tokenizer, text=t, max_length=max_length)
+        gc.collect()
 
-        raw_texts = iter_tosdr5_texts(type="raw")
-        summ_texts = iter_tosdr5_texts(type="summ")
+    def score(self, pred_texts, summ_texts):
 
-        pred_texts = [" ".join(summarizer.summarise(raw_text, threshold=0.725))
-                      for raw_text in tqdm(raw_texts, desc="Extractive model")]
-
-        # Score.
         scores = []
-        scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
+        metrics = ['rouge1', 'rouge2', 'rougeL']
+        scorer = rouge_scorer.RougeScorer(metrics, use_stemmer=True)
         for t_pred, t_sum in zip(pred_texts, summ_texts):
             scores.append(scorer.score(target=t_sum, prediction=t_pred))
 
@@ -38,7 +45,39 @@ class TestTOSDR5(unittest.TestCase):
                 r[v]["r"].append(s[v][1])
                 r[v]["f"].append(s[v][2])
 
-        for m in ["rouge1", "rouge2", "rougeL"]:
-            print(sum(r[m]["p"])/len(r[m]["p"]),
-                  sum(r[m]["r"])/len(r[m]["r"]),
-                  sum(r[m]["f"])/len(r[m]["f"]))
+        for m in metrics:
+            print(round(sum(r[m]["p"]) / len(r[m]["p"]), 3), " & ",
+                  round(sum(r[m]["r"]) / len(r[m]["r"]), 3), " & ",
+                  round(sum(r[m]["f"]) / len(r[m]["f"]), 3), " & ")
+
+    def test(self):
+
+        summarizer = ExtractiveSummariser(
+            embeddings_path="../backend/backend/models/extractive/embeddings.npz",
+            cache_folder=TestTOSDR5.cache_dir)
+
+        raw_texts = list(iter_tosdr5_texts(type="raw"))
+        summ_texts = list(iter_tosdr5_texts(type="summ"))
+
+        lxr = lexrank_init(corpus_path=join(dirname(__file__), "data/bbc/politics"))
+
+        models = {
+            # Extractive
+            "lsa": lambda texts: [lsa_infer(t, sentences_count=10) for t in tqdm(texts, desc="LSA")],
+            "ex": lambda texts: [" ".join(summarizer.summarise(t, threshold=0.725)) for t in tqdm(texts, desc="Extractive")],
+            "lexrank": lambda texts: [lexrank_infer(lxr, text=t, sent_limit=10) for t in tqdm(texts, desc="LexRank")],
+            # Abstractive
+            "legal-pegasus": lambda texts: tqdm(self.abstract(hf_model_name="nsi319/legal-pegasus", texts=texts, max_length=512), desc="Abstract (Legal-PEGASUS)"),
+            "t5": lambda texts: tqdm(self.abstract(hf_model_name="mrm8488/t5-base-finetuned-summarize-news", texts=texts, max_length=512), desc="Abstract (T5)"),
+            "longt5": lambda texts: tqdm(self.abstract(hf_model_name="pszemraj/long-t5-tglobal-base-16384-book-summary", texts=texts, max_length=1020), desc="Abstract (LongT5-TGlobal)"),
+            # Hybrid
+            "ex-legal-pegasus": lambda texts: models["legal-pegasus"](models["ex"](texts)),
+            "ex-t5": lambda texts: models["t5"](models["ex"](texts)),
+            "ex-longt5": lambda texts: models["longt5"](models["ex"](texts)),
+        }
+
+        for m_name in ["lsa", "ex", "lexrank",
+                       "legal-pegasus", "t5", "longt5",
+                       "ex-legal-pegasus", "ex-t5", "ex-longt5"]:
+            m = models[m_name]
+            self.score(pred_texts=m(raw_texts), summ_texts=summ_texts)
