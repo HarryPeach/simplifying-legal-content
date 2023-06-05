@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from backend.simplifier import SimplificationModel
 from backend.abstractive_summarizer import AbstractiveSummariser
 from backend.severity_classifier import SeverityClassifier
 from backend.extractive_summarizer import ExtractiveSummariser
@@ -22,6 +23,7 @@ app.add_middleware(
 EXTRACTIVE_SUMMARISER = ExtractiveSummariser()
 ABSTRACTIVE_SUMMARISER = AbstractiveSummariser()
 SEVERITY_CLASSIFER = SeverityClassifier()
+SIMPLIFIER = SimplificationModel()
 
 
 class ExtractiveInputItem(BaseModel):
@@ -51,11 +53,23 @@ class AbstractiveSummaryItem(BaseModel):
     """The input body for an abstractive summary
     """
     text: list[str]
+    length: int
 
 
 @app.post("/abstractive/")
 async def get_abstractive(item: AbstractiveSummaryItem):
-    return ABSTRACTIVE_SUMMARISER.summarise(item.text)
+    return ABSTRACTIVE_SUMMARISER.summarise(item.text, item.length)
+
+
+class SimplificationModelItem(BaseModel):
+    """The input body for a simplification
+    """
+    text: str
+
+
+@app.post("/simplify/")
+async def get_simplified(item: SimplificationModelItem):
+    return SIMPLIFIER.simplify(item.text)
 
 
 @app.get("/")

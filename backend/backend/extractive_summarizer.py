@@ -7,9 +7,10 @@ import logging
 
 
 class ExtractiveSummariser():
-    def __init__(self, embeddings_path="backend/models/extractive/embeddings.npz", model="all-mpnet-base-v2"):
+    def __init__(self, embeddings_path="backend/models/extractive/embeddings.npz",
+                 model="all-mpnet-base-v2", cache_folder=None):
         nltk.download("punkt")
-        self.sentence_model = SentenceTransformer(model)
+        self.sentence_model = SentenceTransformer(model, cache_folder=cache_folder)
         self.embeddings = np.load(embeddings_path)["arr_0"]
 
     def _get_embeddings(self, sentences: list[str]) -> list[list[int]]:
