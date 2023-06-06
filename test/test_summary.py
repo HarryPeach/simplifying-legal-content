@@ -29,6 +29,14 @@ class TestSummary(unittest.TestCase):
 
         print(summary)
 
+    def test_distilbart(self):
+        hf_model_name = "ml6team/distilbart-tos-summarizer-tosdr"
+        tokenizer = AutoTokenizer.from_pretrained(hf_model_name, cache_dir=TestSummary.cache_dir)
+        model = AutoModelForSeq2SeqLM.from_pretrained(hf_model_name, cache_dir=TestSummary.cache_dir)
+        summary = infer(tokenizer=tokenizer, model=model, text=utils.text, max_length=510)
+
+        print(summary)
+
     def test_abstract_longt5_summary(self):
         hf_model_name = "pszemraj/long-t5-tglobal-base-16384-book-summary"
         tokenizer = AutoTokenizer.from_pretrained(hf_model_name, cache_dir=TestSummary.cache_dir)

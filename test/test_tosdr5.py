@@ -65,31 +65,36 @@ class TestTOSDR5(unittest.TestCase):
         models = {
             # Extractive.
             "lsa": lambda texts: [lsa_infer(t, perc_limit=0.1) for t in tqdm(texts, desc="LSA")],
-            "ex": lambda texts: [summarizer.summarise(t, perc_limit=1.0) for t in tqdm(texts, desc="Extractive")],
+            "ex": lambda texts: [summarizer.summarise(t, perc_limit=0.5) for t in tqdm(texts, desc="Extractive")],
             "lexrank": lambda texts: [lexrank_infer(lxr, text=t, perc_limit=0.5) for t in tqdm(texts, desc="LexRank")],
             # Abstractive.
             "legal-pegasus": lambda texts: tqdm(self.abstract(hf_model_name="nsi319/legal-pegasus", texts=texts, max_length=512), desc="Abstract (Legal-PEGASUS)"),
             "t5": lambda texts: tqdm(self.abstract(hf_model_name="mrm8488/t5-base-finetuned-summarize-news", texts=texts, max_length=512), desc="Abstract (T5)"),
             "longt5": lambda texts: tqdm(self.abstract(hf_model_name="pszemraj/long-t5-tglobal-base-16384-book-summary", texts=texts, max_length=1020), desc="Abstract (LongT5-TGlobal)"),
+            "distilbart": lambda texts: tqdm(self.abstract(hf_model_name="ml6team/distilbart-tos-summarizer-tosdr", texts=texts, max_length=512), desc="Abstract (distil-BART)"),
             # Hybrid
             "ex-legal-pegasus": lambda texts: models["legal-pegasus"](models["ex"](texts)),
             "ex-t5": lambda texts: models["t5"](models["ex"](texts)),
             "ex-longt5": lambda texts: models["longt5"](models["ex"](texts)),
+            "ex-distilbart": lambda texts: models["distilbart"](models["ex"](texts)),
             # Hybrid based on lexrank.
             "lexrank-legal-pegasus": lambda texts: models["legal-pegasus"](models["lexrank"](texts)),
             "lexrank-t5": lambda texts: models["t5"](models["lexrank"](texts)),
             "lexrank-longt5": lambda texts: models["longt5"](models["lexrank"](texts)),
+            "lexrank-distilbart": lambda texts: models["distilbart"](models["lexrank"](texts)),
         }
 
         for m_name in [#"lsa",
                        #"lexrank",
                        #"ex",
                        #"legal-pegasus", "t5", "longt5",
-                       "ex-t5", "ex-longt5","ex-legal-pegasus",
+                       # "distilbart",
+                       # "ex-t5", "ex-longt5","ex-legal-pegasus",
+                       "ex-distilbart",
                        #"lexrank-t5",
                        #"lexrank-longt5",
-                       #"lexrank-legal-pegasus"
-                        ]:
+                       #"lexrank-legal-pegasus",
+                       "lexrank-distilbart"]:
             if m_name in models:
                 m = models[m_name]
                 self.score(pred_texts=m(raw_texts), summ_texts=summ_texts)
