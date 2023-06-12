@@ -14,17 +14,20 @@ class SimplificationModel():
         pl = pipeline(model=model_path)
         mask = pl.tokenizer.mask_token
 
-        print(mask)
+        hard_words = None
+        with open("backend/models/hard_words.txt", "r") as hard_words_list:
+            data = hard_words_list.read()
+            hard_words = data
 
-        print(pl("This is a [MASK] phrase"))
+        masked_list = []
+        for line in input:
+            line_copy = line
+            for x in line.split(" "):
+                if x in hard_words.split("\n"):
+                    line_copy = line_copy.replace(x, mask)
+                    line_copy = pl(line_copy)[0]["sequence"]
+            masked_list.append(line_copy)
 
-        # tokenizer = BertTokenizer.from_pretrained(bert_model)
-        # model = BertForMaskedLM.from_pretrained(bert_model)
-        # model.eval()
+        print(masked_list)
 
-        # text = "To provide the Meta Products, we must process information about you. The type of information that we collect depends on how you use our Products."
-
-        # encoded_input = tokenizer(input, return_tensors="pt")
-        # output = model(**encoded_input)
-
-        # print(output)
+        return masked_list

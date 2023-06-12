@@ -7,6 +7,7 @@
 
   let text_input = "";
   let points = [];
+  let stitched_points = [];
   let current_status = "";
 
   let headers = new Headers();
@@ -40,7 +41,7 @@
       headers: headers,
       body: JSON.stringify({
         text: input,
-        length: summary_length
+        length: summary_length,
       }),
     });
 
@@ -48,7 +49,7 @@
   };
 
   const getSimplification = async (input) => {
-    const simplified = await fetch(`${variables.apiurl}/simplified/`, {
+    const simplified = await fetch(`${variables.apiurl}/simplify/`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify({
@@ -78,9 +79,25 @@
     const extractive_summary = await getExtractiveSummary(text_input);
     current_status = "Creating abstractive summary";
     abstractive_promise = await getAbstractiveSummary(extractive_summary);
+    current_status = "Creating simplifications";
+    simplified_promise = await getSimplification(extractive_summary);
     current_status = "Classifying severity";
     points = await getSeverityClassification(extractive_summary);
+
+    for (let i = 0; i < simplified_promise.length; i++) {
+      let combined_object = points[i];
+      if (
+        simplified_promise[i].toLowerCase() === points[i].text.toLowerCase()
+      ) {
+        combined_object.simplified = simplified_promise[i];
+      } else {
+        combined_object.simplified = "";
+      }
+      stitched_points = [...stitched_points, combined_object];
+    }
     current_status = "";
+
+    console.log(stitched_points);
 
     // @ts-ignore
     document.querySelector(":root").style.overflow = "auto";
@@ -137,10 +154,7 @@
         There was an error accessing the API: {error}
       {/await}
     </div>
-    <div id="grid-item">
-      <h2>Simplified Output</h2>
-      <span class="explanation">Simplified Output from Mayanks model</span>
-    </div>
+
     <div id="grid-item">
       <h2>Extractive Summary</h2>
       <span class="explanation">
@@ -151,7 +165,7 @@
         grey being <strong>neutral</strong> and green being
         <strong>good</strong>.
       </span>
-      <ExtractivePoints {points} />
+      <ExtractivePoints {stitched_points} />
     </div>
   </div>
   <footer>Created by Harry Peach &copy; - Version 0.2.0</footer>

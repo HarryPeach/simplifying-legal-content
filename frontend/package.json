@@ -15,6 +15,7 @@
     "vite": "^2.8.0"
   },
   "dependencies": {
+    "clsx": "^1.2.1",
     "dotenv": "^16.0.2",
     "svelte-icons": "^2.1.0",
     "svelte-loading-spinners": "^0.1.7"

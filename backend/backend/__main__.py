@@ -64,7 +64,7 @@ async def get_abstractive(item: AbstractiveSummaryItem):
 class SimplificationModelItem(BaseModel):
     """The input body for a simplification
     """
-    text: str
+    text: list[str]
 
 
 @app.post("/simplify/")
