@@ -118,28 +118,28 @@
   <div id="grid-container">
     <div id="grid-item">
       <h2>Terms</h2>
-      <span class="explanation"
+      <!-- <span class="explanation"
         >Paste the Terms and Conditions in the text box below, modify the
         settings and then click to process the response.</span
-      >
-      <SocialButtons bind:input={text_input} />
+      > -->
+      <!-- <SocialButtons bind:input={text_input} /> -->
       <textarea
         rows="10"
         cols="30"
         placeholder="Paste the Terms and Conditions here..."
         bind:value={text_input}
       />
-      <Spoiler bind:length={summary_length} bind:threshold />
+      <!-- <Spoiler bind:length={summary_length} bind:threshold /> -->
       <button on:click={onButtonClick}>Generate Summary</button>
       <br />
     </div>
     <div id="grid-item">
       <h2>Abstractive Summary</h2>
-      <span class="explanation">
+      <!-- <span class="explanation">
         The <strong>Abstractive Summary</strong> is a summary that attempts to simplify
         a text into a human-readable format. This should be much shorter than the
         original Terms and also use simpler language.
-      </span>
+      </span> -->
       {#await abstractive_promise}
         Awaiting response from server...
       {:then data}
@@ -157,14 +157,14 @@
 
     <div id="grid-item">
       <h2>Extractive Summary</h2>
-      <span class="explanation">
+      <!-- <span class="explanation">
         The <strong>Extractive Summary</strong> is a summary that is created
         from verbatim points in the original terms. They are also automatically
         ranked by the "severity" and importance of the terms, with red being a
         <strong>blocker</strong>, yellow being a <strong>bad</strong> point,
         grey being <strong>neutral</strong> and green being
         <strong>good</strong>.
-      </span>
+      </span> -->
       <ExtractivePoints {stitched_points} />
     </div>
   </div>
