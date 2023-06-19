@@ -89,9 +89,9 @@
       if (
         simplified_promise[i].toLowerCase() === points[i].text.toLowerCase()
       ) {
-        combined_object.simplified = simplified_promise[i];
-      } else {
         combined_object.simplified = "";
+      } else {
+        combined_object.simplified = simplified_promise[i];
       }
       stitched_points = [...stitched_points, combined_object];
     }

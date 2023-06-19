@@ -24,7 +24,7 @@ class SimplificationModel():
             line_copy = line
             for x in line.split(" "):
                 if x in hard_words.split("\n"):
-                    line_copy = line_copy.replace(x, mask)
+                    line_copy = line_copy.replace(x, f"<strong>{mask}</strong>")
                     line_copy = pl(line_copy)[0]["sequence"]
             masked_list.append(line_copy)
 
