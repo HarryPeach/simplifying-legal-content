@@ -51,6 +51,11 @@ class TestTOSDR5(unittest.TestCase):
                 round(sum(r[m]["r"]) / len(r[m]["r"]), 3),
                 round(sum(r[m]["f"]) / len(r[m]["f"]), 3)))
 
+    def test_gpt(self):
+        summ_texts_orig = list(iter_tosdr5_texts(type="summ"))
+        summ_texts_pred = list(iter_tosdr5_texts(type="summ", dataset_filename="tos-dr-chatgpt4.zip"))
+        self.score(pred_texts=summ_texts_pred, summ_texts=summ_texts_orig)
+
     def test(self):
 
         summarizer = TestExtractiveSummariser(
@@ -63,7 +68,7 @@ class TestTOSDR5(unittest.TestCase):
         lxr = lexrank_init(corpus_path=join(dirname(__file__), "data/bbc/politics"))
 
         models = {
-            # Extractive.
+            # Extractive
             "lsa": lambda texts: [lsa_infer(t, perc_limit=0.1) for t in tqdm(texts, desc="LSA")],
             "ex": lambda texts: [summarizer.summarise(t, perc_limit=0.5) for t in tqdm(texts, desc="Extractive")],
             "lexrank": lambda texts: [lexrank_infer(lxr, text=t, perc_limit=0.5) for t in tqdm(texts, desc="LexRank")],
