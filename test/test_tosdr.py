@@ -6,7 +6,7 @@ from rouge_score import rouge_scorer
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-from src.tosdr5 import iter_tosdr5_texts
+from src.tosdr_dataset import iter_tosdr_dataset_texts
 from src.lsa_infer import lsa_infer
 from src.lexrank_init import lexrank_init, lexrank_infer
 from src.abstract_infer import infer
@@ -52,8 +52,8 @@ class TestTOSDR5(unittest.TestCase):
                 round(sum(r[m]["f"]) / len(r[m]["f"]), 3)))
 
     def test_gpt(self):
-        summ_texts_orig = list(iter_tosdr5_texts(type="summ"))
-        summ_texts_pred = list(iter_tosdr5_texts(type="summ", dataset_filename="tos-dr-chatgpt4.zip"))
+        summ_texts_orig = list(iter_tosdr_dataset_texts(type="summ"))
+        summ_texts_pred = list(iter_tosdr_dataset_texts(type="summ", dataset_filename="tos-dr-chatgpt4.zip"))
         self.score(pred_texts=summ_texts_pred, summ_texts=summ_texts_orig)
 
     def test(self):
@@ -62,31 +62,31 @@ class TestTOSDR5(unittest.TestCase):
             embeddings_path="../backend/backend/models/extractive/embeddings.npz",
             cache_folder=TestTOSDR5.cache_dir)
 
-        raw_texts = list(iter_tosdr5_texts(type="raw"))
-        summ_texts = list(iter_tosdr5_texts(type="summ"))
+        raw_texts = list(iter_tosdr_dataset_texts(type="raw", dataset_filename="tos-dr-10.zip"))
+        summ_texts = list(iter_tosdr_dataset_texts(type="summ", dataset_filename="tos-dr-10.zip"))
 
         lxr = lexrank_init(corpus_path=join(dirname(__file__), "data/bbc/politics"))
 
         models = {
             # Extractive
             "lsa": lambda texts: [lsa_infer(t, perc_limit=0.1) for t in tqdm(texts, desc="LSA")],
-            "ex": lambda texts: [summarizer.summarise(t, perc_limit=0.5) for t in tqdm(texts, desc="Extractive")],
-            "lexrank": lambda texts: [lexrank_infer(lxr, text=t, perc_limit=0.5) for t in tqdm(texts, desc="LexRank")],
+            "ex": lambda texts, perc=0.1: [summarizer.summarise(t, perc_limit=perc) for t in tqdm(texts, desc="Extractive")],
+            "lexrank": lambda texts, perc=0.1: [lexrank_infer(lxr, text=t, perc_limit=perc) for t in tqdm(texts, desc="LexRank")],
             # Abstractive.
             "legal-pegasus": lambda texts: tqdm(self.abstract(hf_model_name="nsi319/legal-pegasus", texts=texts, max_length=512), desc="Abstract (Legal-PEGASUS)"),
             "t5": lambda texts: tqdm(self.abstract(hf_model_name="mrm8488/t5-base-finetuned-summarize-news", texts=texts, max_length=512), desc="Abstract (T5)"),
             "longt5": lambda texts: tqdm(self.abstract(hf_model_name="pszemraj/long-t5-tglobal-base-16384-book-summary", texts=texts, max_length=1020), desc="Abstract (LongT5-TGlobal)"),
             "distilbart": lambda texts: tqdm(self.abstract(hf_model_name="ml6team/distilbart-tos-summarizer-tosdr", texts=texts, max_length=512), desc="Abstract (distil-BART)"),
             # Hybrid
-            "ex-legal-pegasus": lambda texts: models["legal-pegasus"](models["ex"](texts)),
-            "ex-t5": lambda texts: models["t5"](models["ex"](texts)),
-            "ex-longt5": lambda texts: models["longt5"](models["ex"](texts)),
-            "ex-distilbart": lambda texts: models["distilbart"](models["ex"](texts)),
+            "ex-legal-pegasus": lambda texts: models["legal-pegasus"](models["ex"](texts, perc=0.5)),
+            "ex-t5": lambda texts: models["t5"](models["ex"](texts=texts, perc=0.5)),
+            "ex-longt5": lambda texts: models["longt5"](models["ex"](texts=texts, perc=0.5)),
+            "ex-distilbart": lambda texts: models["distilbart"](models["ex"](texts=texts, perc=0.5)),
             # Hybrid based on lexrank.
-            "lexrank-legal-pegasus": lambda texts: models["legal-pegasus"](models["lexrank"](texts)),
-            "lexrank-t5": lambda texts: models["t5"](models["lexrank"](texts)),
-            "lexrank-longt5": lambda texts: models["longt5"](models["lexrank"](texts)),
-            "lexrank-distilbart": lambda texts: models["distilbart"](models["lexrank"](texts)),
+            "lexrank-legal-pegasus": lambda texts: models["legal-pegasus"](models["lexrank"](texts, perc=0.5)),
+            "lexrank-t5": lambda texts: models["t5"](models["lexrank"](texts, perc=0.5)),
+            "lexrank-longt5": lambda texts: models["longt5"](models["lexrank"](texts, perc=0.5)),
+            "lexrank-distilbart": lambda texts: models["distilbart"](models["lexrank"](texts, perc=0.5)),
         }
 
         for m_name in [#"lsa",

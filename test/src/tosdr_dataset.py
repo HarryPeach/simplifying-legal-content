@@ -2,7 +2,7 @@ import zipfile
 from os.path import dirname, realpath, join
 
 
-def iter_tosdr5_texts(type="raw", dataset_filename="tos-dr-5.zip"):
+def iter_tosdr_dataset_texts(type="raw", dataset_filename="tos-dr-5.zip"):
     """ Iteration of the input raw texts of the TOSDR-5 dataset.
         type: str
             type of texts to iter from TOS-DR5 dataset.
