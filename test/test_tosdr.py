@@ -1,4 +1,5 @@
 import gc
+import os
 import unittest
 from os.path import join, dirname
 
@@ -52,9 +53,24 @@ class TestTOSDR5(unittest.TestCase):
                 round(sum(r[m]["f"]) / len(r[m]["f"]), 3)))
 
     def test_gpt(self):
-        summ_texts_orig = list(iter_tosdr_dataset_texts(type="summ"))
+        summ_texts_orig = list(iter_tosdr_dataset_texts(type="summ", dataset_filename="tos-dr-10.zip"))
         summ_texts_pred = list(iter_tosdr_dataset_texts(type="summ", dataset_filename="tos-dr-chatgpt4.zip"))
         self.score(pred_texts=summ_texts_pred, summ_texts=summ_texts_orig)
+
+    def test_prepare_prompt_and_texts(self):
+        raw_texts = list(iter_tosdr_dataset_texts(type="raw", dataset_filename="tos-dr-10.zip", return_name=True))
+
+        if not os.path.exists("out"):
+            os.makedirs("out")
+            
+        prompt = "Provide the raw text summary in a single paragraph for the following document: "
+
+        for name, raw_text in raw_texts:
+            raw_text = raw_text.replace("\n"," ")
+            r = prompt + "\n" + raw_text
+            content = r[:16000]
+            with open(f"out/{name}", "w") as f:
+                f.write(content)
 
     def test(self):
 
@@ -94,12 +110,14 @@ class TestTOSDR5(unittest.TestCase):
                        #"ex",
                        #"legal-pegasus", "t5", "longt5",
                        # "distilbart",
-                       # "ex-t5", "ex-longt5","ex-legal-pegasus",
-                       "ex-distilbart",
+                       # "ex-t5", "ex-longt5",
+                       "ex-legal-pegasus",
+                       #"ex-distilbart",
                        #"lexrank-t5",
                        #"lexrank-longt5",
                        #"lexrank-legal-pegasus",
-                       "lexrank-distilbart"]:
+                       #"lexrank-distilbart"
+        ]:
             if m_name in models:
                 m = models[m_name]
                 self.score(pred_texts=m(raw_texts), summ_texts=summ_texts)
