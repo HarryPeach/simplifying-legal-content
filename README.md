@@ -1,8 +1,11 @@
-# LegaTeS
+# Using Sentence Embedding Techniques for Enhancing Terms-of-Service Text Summarization
 
 ![](https://img.shields.io/badge/Python-3.9-green.svg)
 
-LegaTeS represents a hybrid text summarization system aimed on extraction of the salient information from legal documents.
+This repository represent a souce code of the **LegaTes** system described in paper 
+[Using Sentence Embedding Techniques for Enhancing Terms-of-Service Text Summarization](https://www.mirlabs.org/ibica23/).
+
+**LegaTeS** represents a hybrid text summarization system aimed on extraction of the salient information from legal documents.
 This is the frontend and backend implementation of the related system. 
 The repository consists of a web interface created with [Svelte](https://github.com/sveltejs/svelte), 
 and a FastAPI/PyTorch/TensorFlow backend.
@@ -72,3 +75,14 @@ All the resources related to evaluation are shared in `data` [folder](data/).
 
 We consider a manually composed `ToS;DR5` [dataset](data/tos-dr-5.7z) for assessment of the related text summarization system components.
 
+# References
+
+```bibtex
+@inproceedings{harry2023using,
+  title={Using Sentence Embedding Techniques for Enhancing Terms-of-Service Text Summarization},
+  author={Peach, Harry and Rusnachenko, Nicolay and Baraskar, Mayank and Liang, Huizhi},
+  booktitle={14th International Conference on Innovations in Bio-Inspired Computing and Applications (IBICA-2023)},
+  year={2023},
+  organization={Newcastle University}
+}
+```
